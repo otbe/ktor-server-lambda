@@ -1,0 +1,18 @@
+service: aws-kotlin-jvm-maven
+
+provider:
+  name: aws
+  runtime: java8
+  region: eu-central-1
+
+package:
+  artifact: target/example-0.0.1-aws.jar
+
+functions:
+  hello:
+    handler: com.ktor.HandlerKt::handler
+    timeout: 30
+    events:
+      - http:
+          path: /{proxy+}
+          method: post

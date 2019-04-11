@@ -10,7 +10,7 @@ import io.ktor.request.RequestCookies
 import io.ktor.server.engine.BaseApplicationRequest
 import kotlinx.coroutines.io.ByteReadChannel
 
-class LambdaApplicationRequest(
+internal class LambdaApplicationRequest(
   call: ApplicationCall,
   private val request: APIGatewayProxyRequestEvent
 ) : BaseApplicationRequest(call) {

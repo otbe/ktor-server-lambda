@@ -28,7 +28,12 @@ internal class LambdaEngine(
   fun handleRequest(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
     runBlocking {
       val output = ByteChannel(true)
-      val call = LambdaApplicationCall(application, input, output)
+      val call = LambdaApplicationCall(
+        application,
+        input,
+        context,
+        output
+      )
 
       pipeline.execute(call)
 

@@ -34,7 +34,9 @@ fun Application.module() {
   routing {
     post<GraphQLRequest> {
       val s = call.receive<GraphQLRequest>()
-      println(s.name)
+//      println(call.attributes[ProxyRequestContextKey])
+//      println(call.attributes[LambdaContextKey])
+
 
       call.respondText("HELLO WORLD!2", contentType = ContentType.Text.Plain)
     }

@@ -5,6 +5,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.OutgoingContent
 import io.ktor.response.ResponseHeaders
 import io.ktor.server.engine.BaseApplicationResponse
+import io.ktor.util.toMap
 import kotlinx.coroutines.io.ByteChannel
 
 internal class LambdaApplicationResponse(call: ApplicationCall, val output: ByteChannel) :
@@ -70,5 +71,11 @@ internal class LambdaApplicationResponse(call: ApplicationCall, val output: Byte
 
   override fun setStatus(statusCode: HttpStatusCode) {
     this.statusCode = statusCode
+  }
+
+  fun getApiGatewayHeaders() = headers.allValues().toMap().mapValuesTo(
+    mutableMapOf()
+  ) {
+    it.value.first()
   }
 }

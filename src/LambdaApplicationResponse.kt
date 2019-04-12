@@ -8,7 +8,7 @@ import io.ktor.server.engine.BaseApplicationResponse
 import io.ktor.util.toMap
 import kotlinx.coroutines.io.ByteChannel
 
-internal class LambdaApplicationResponse(call: ApplicationCall, val output: ByteChannel) :
+internal class LambdaApplicationResponse(call: ApplicationCall, private val output: ByteChannel) :
   BaseApplicationResponse(call) {
   private var statusCode: HttpStatusCode = HttpStatusCode.OK
   private val headersNames = ArrayList<String>()

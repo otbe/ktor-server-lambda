@@ -30,7 +30,7 @@ class ApplicationTest {
 
         assertEquals(HttpStatusCode.OK, response.status())
         assertEquals("Hello boo!", response.content)
-        
+
       }
     }
   }

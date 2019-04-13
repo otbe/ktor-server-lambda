@@ -15,6 +15,7 @@
 
   <name>parent</name>
   <description>The parent POM for all ktor-server-lambda modules</description>
+  <inceptionYear>2019</inceptionYear>
 
   <properties>
 

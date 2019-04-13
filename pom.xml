@@ -15,7 +15,45 @@
 
   <name>parent</name>
   <description>The parent POM for all ktor-server-lambda modules</description>
+  <url>https://github.com/otbe/ktor-server-lambda</url>
   <inceptionYear>2019</inceptionYear>
+
+  <issueManagement>
+    <system>github</system>
+    <url>https://github.com/otbe/ktor-server-lambda/issues</url>
+  </issueManagement>
+
+  <scm>
+    <connection>scm:git:git@github.com:otbe/ktor-server-lambda.git</connection>
+    <developerConnection>scm:git:git@github.com:otbe/ktor-server-lambda.git</developerConnection>
+    <url>https://github.com/otbe/ktor-server-lambda.git</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>otbe</id>
+      <name>Benjamin Otto</name>
+      <email>benjamin.otto@mercateo.com</email>
+      <url>http://www.mercateo.com</url>
+      <organization>Mercateo AG</organization>
+      <organizationUrl>http://www.mercateo.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>alxgrk</id>
+      <name>Alexander girke</name>
+      <email>alexander.girke@mercateo.com</email>
+      <url>http://www.mercateo.com</url>
+      <organization>Mercateo AG</organization>
+      <organizationUrl>http://www.mercateo.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
 
   <properties>
 
@@ -36,7 +74,7 @@
 
   <repositories>
     <repository>
-      <id>repo2</id>
+      <id>kotlin-bintray</id>
       <url>https://kotlin.bintray.com/ktor</url>
     </repository>
   </repositories>

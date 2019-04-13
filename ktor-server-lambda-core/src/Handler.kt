@@ -31,7 +31,7 @@ import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.server.engine.EngineAPI
 
-fun Application.module() {
+fun Application.module(testing: Boolean = false) {
   install(DefaultHeaders)
 
   install(ContentNegotiation) {
@@ -46,7 +46,7 @@ fun Application.module() {
       val s = call.receive<GraphQLRequest>()
       println(s.name)
 
-      call.respondText("HELLO WORLD!2", contentType = ContentType.Text.Plain)
+      call.respondText("Hello ${s.name}!", contentType = ContentType.Text.Plain)
     }
 
   }

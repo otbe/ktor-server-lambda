@@ -32,8 +32,8 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
         
-      # run tests!
-      - run: mvn verify
+      # run tests and install locally!
+      - run: mvn verify install
 
 #  deploy:
 #    docker:

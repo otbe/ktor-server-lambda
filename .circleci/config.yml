@@ -18,9 +18,6 @@ jobs:
     steps:
       - checkout
 
-      # install module dependencies locally
-      - run: mvn clean install -DskipTests
-
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -28,15 +25,22 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: mvn dependency:go-offline
+      - run:
+        - name: Installing module dependencies
+        - command: mvn clean install -DskipTests
+
+      - run:
+        - name: Going offline...
+        - command: mvn dependency:go-offline
 
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
         
-      # run tests
-      - run: mvn verify
+      - run:
+        - name: Running tests
+        - command: mvn verify
 
 #  deploy:
 #    docker:

@@ -18,6 +18,9 @@ jobs:
     steps:
       - checkout
 
+      # install module dependencies locally
+      - run: mvn clean install -DskipTests
+
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -32,8 +35,8 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
         
-      # run tests and install locally!
-      - run: mvn verify install
+      # run tests
+      - run: mvn verify
 
 #  deploy:
 #    docker:

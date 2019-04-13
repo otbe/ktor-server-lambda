@@ -26,12 +26,12 @@ jobs:
           - v1-dependencies-
 
       - run:
-        - name: Installing module dependencies
-        - command: mvn clean install -DskipTests
+          name: Installing module dependencies
+          command: mvn clean install -DskipTests
 
       - run:
-        - name: Going offline...
-        - command: mvn dependency:go-offline
+          name: Going offline...
+          command: mvn dependency:go-offline
 
       - save_cache:
           paths:
@@ -39,8 +39,8 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
         
       - run:
-        - name: Running tests
-        - command: mvn verify
+          name: Running tests
+          command: mvn verify
 
 #  deploy:
 #    docker:

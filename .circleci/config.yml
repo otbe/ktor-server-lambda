@@ -9,8 +9,8 @@ defaults: &defaults
   docker:
     - image: circleci/openjdk:8-jdk
   environment:
-    MAVEN_OPTS: -Xmx3200m
-
+    MAVEN_REPO: "~/.m2"
+    MVN_CMD: "mvn -B -Dmaven.repo.local=$MAVEN_REPO --settings=.settings.xml"
 
 jobs:
   build:
@@ -27,20 +27,20 @@ jobs:
 
       - run:
           name: Installing module dependencies
-          command: mvn clean install -DskipTests
+          command: $MVN_CMD clean install -DskipTests
 
       - run:
           name: Going offline...
-          command: mvn dependency:go-offline
+          command: $MVN_CMD dependency:go-offline
 
       - save_cache:
           paths:
-            - ~/.m2
+            - $MAVEN_REPO
           key: v1-dependencies-{{ checksum "pom.xml" }}
         
       - run:
           name: Running tests
-          command: mvn verify
+          command: $MVN_CMD verify
 
   deploy:
     <<: *defaults
@@ -48,7 +48,7 @@ jobs:
       - checkout
       - run:
           name: Deploy Master to Maven Central
-          command: mvn -Poss.release-sign-artifacts deploy
+          command: $MVN_CMD deploy -Poss.release-sign-artifacts -Dgpg.passphrase=$GPG_PASSPHRASE
 
 workflows:
   version: 2
@@ -58,6 +58,6 @@ workflows:
       - deploy:
           requires:
             - build
-          filters:
-            branches:
-              only: master
+#          filters:
+#            branches:
+#              only: master

@@ -10,7 +10,7 @@ defaults: &defaults
     - image: circleci/openjdk:8-jdk
   environment:
     MAVEN_REPO: "~/.m2"
-    MVN_CMD: "mvn -B -Dmaven.repo.local=$MAVEN_REPO --settings=.settings.xml"
+    MVN_CMD: "mvn -B --settings=.settings.xml"
 
 jobs:
   build:

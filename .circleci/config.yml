@@ -52,7 +52,7 @@ jobs:
               echo $GPG_SECRET_BASE64 | base64 --decode | gpg --import --no-tty --batch --yes
               echo $GPG_OWNERTRUST_BASE64 | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
               $MVN_CMD deploy -Poss.release-sign-artifacts \
-                  -Dgpg.executable=gpg
+                  -Dgpg.executable=gpg \
                   -Dgpg.passphrase=$GPG_PASSPHRASE \
                   -pl='!ktor-server-lambda-sample'
 

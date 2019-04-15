@@ -49,9 +49,13 @@ jobs:
       - run:
           name: Deploy Master to Maven Central
           command: |
+              echo ${GPG_SECRET} > /tmp/secretkey.asc
+              gpg --import /tmp/secretkey.asc
               $MVN_CMD deploy -Poss.release-sign-artifacts \
                   -Dgpg.passphrase=$GPG_PASSPHRASE \
                   -pl='!ktor-server-lambda-sample'
+              gpg --delete-key 934B88A63DB62338
+              rm /tmp/secretkey.asc
 
 workflows:
   version: 2

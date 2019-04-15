@@ -135,6 +135,8 @@
                   <arg>--no-tty</arg>
                   <arg>--batch</arg>
                   <arg>--yes</arg>
+                  <arg>--pinentry-mode</arg>
+                  <arg>loopback</arg>
                 </gpgArguments>
               </configuration>
             </execution>
@@ -150,7 +152,7 @@
         <version>0.9.17</version>
         <executions>
           <execution>
-            <phase>pre-site</phase>
+            <phase>package</phase>
             <goals>
               <goal>javadocJar</goal>
             </goals>

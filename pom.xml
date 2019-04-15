@@ -81,6 +81,13 @@
     </repository>
   </repositories>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>jcenter</id>
+      <url>https://jcenter.bintray.com/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <build>
     <pluginManagement>
       <plugins>
@@ -123,6 +130,7 @@
                 <goal>sign</goal>
               </goals>
               <configuration>
+                <!-- necessary for running on CircleCI -->
                 <gpgArguments>
                   <arg>--no-tty</arg>
                   <arg>--batch</arg>
@@ -134,5 +142,21 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <!-- necessary for being deployed to Maven Central -->
+      <plugin>
+        <groupId>org.jetbrains.dokka</groupId>
+        <artifactId>dokka-maven-plugin</artifactId>
+        <version>0.9.17</version>
+        <executions>
+          <execution>
+            <phase>pre-site</phase>
+            <goals>
+              <goal>javadocJar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 </project>

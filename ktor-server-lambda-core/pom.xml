@@ -63,7 +63,7 @@
 
     <dependency>
       <groupId>io.ktor</groupId>
-      <artifactId>ktor-server-tests</artifactId>
+      <artifactId>ktor-server</artifactId>
       <version>${ktor_version}</version>
       <scope>test</scope>
     </dependency>

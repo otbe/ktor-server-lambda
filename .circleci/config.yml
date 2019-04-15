@@ -48,7 +48,10 @@ jobs:
       - checkout
       - run:
           name: Deploy Master to Maven Central
-          command: $MVN_CMD deploy -Poss.release-sign-artifacts -Dgpg.passphrase=$GPG_PASSPHRASE
+          command: |
+              $MVN_CMD deploy -Poss.release-sign-artifacts \
+                  -Dgpg.passphrase=$GPG_PASSPHRASE \
+                  -pl='!ktor-server-lambda-sample'
 
 workflows:
   version: 2

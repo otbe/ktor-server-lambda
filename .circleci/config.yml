@@ -26,6 +26,10 @@ jobs:
           - v1-dependencies-
 
       - run:
+          name: Installing module dependencies
+          command: $MVN_CMD clean install -DskipTests
+
+      - run:
           name: Going offline...
           command: $MVN_CMD dependency:resolve-plugins dependency:go-offline
 
@@ -33,10 +37,6 @@ jobs:
           paths:
             - $MAVEN_REPO
           key: v1-dependencies-{{ checksum "pom.xml" }}
-
-      - run:
-          name: Installing module dependencies
-          command: $MVN_CMD clean install -DskipTests
 
       - run:
           name: Running tests

@@ -36,11 +36,11 @@ jobs:
 
       - run:
           name: Installing module dependencies
-          command: $MVN_CMD -o clean install -DskipTests
+          command: $MVN_CMD clean install -DskipTests
 
       - run:
           name: Running tests
-          command: $MVN_CMD -o verify
+          command: $MVN_CMD verify
 
   deploy:
     <<: *defaults

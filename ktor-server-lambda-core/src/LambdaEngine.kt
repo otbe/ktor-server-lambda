@@ -22,7 +22,6 @@ import io.ktor.server.engine.ApplicationEngineEnvironment
 import io.ktor.server.engine.BaseApplicationEngine
 import io.ktor.server.engine.EngineAPI
 import io.ktor.util.pipeline.execute
-import io.ktor.util.toMap
 import kotlinx.coroutines.io.ByteChannel
 import kotlinx.coroutines.io.close
 import kotlinx.coroutines.runBlocking
@@ -32,7 +31,6 @@ import java.util.concurrent.TimeUnit
 internal class LambdaEngine(
   environment: ApplicationEngineEnvironment
 ) : BaseApplicationEngine(environment) {
-
   override fun start(wait: Boolean): LambdaEngine {
     environment.start()
     return this
@@ -45,7 +43,12 @@ internal class LambdaEngine(
   fun handleRequest(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
     runBlocking {
       val output = ByteChannel(true)
-      val call = LambdaApplicationCall(application, input, output)
+      val call = LambdaApplicationCall(
+        application,
+        input,
+        context,
+        output
+      )
 
       pipeline.execute(call)
 
@@ -53,15 +56,17 @@ internal class LambdaEngine(
       output.readFully(buffer, 0, buffer.size)
       output.close()
 
-      APIGatewayProxyResponseEvent()
-        .withStatusCode(call.response.status()!!.value)
-        .withHeaders(
-          call.response.headers.allValues().toMap().mapValuesTo(
-            mutableMapOf<String, String>()
-          ) {
-            it.value.first()
-          }
+      APIGatewayProxyResponseEvent().apply {
+        withStatusCode(call.response.status()?.value ?: 500)
+
+        withHeaders(
+          call.response.getApiGatewayHeaders()
         )
-        .withBody(String(buffer))
+
+        // TODO https://github.com/otbe/ktor-server-lambda/issues/10
+        if (buffer.isNotEmpty()) {
+          withBody(String(buffer))
+        }
+      }
     }
 }

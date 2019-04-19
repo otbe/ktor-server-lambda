@@ -21,8 +21,6 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.route
 
-fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
-
 val users = mutableListOf(User("1", "Foo Bar"))
 
 fun Routing.users() {

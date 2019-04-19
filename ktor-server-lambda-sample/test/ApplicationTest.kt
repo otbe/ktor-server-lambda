@@ -1,37 +1,28 @@
 package com.ktor
 
+import com.google.gson.GsonBuilder
 import com.mercateo.oss.module
+import com.mercateo.oss.orders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
 import org.junit.Test
 import kotlin.test.assertEquals
+
 
 class ApplicationTest {
 
   @Test
   fun testRoot() {
-    withTestApplication({ module(testing = true) }) {
+    withTestApplication({ module() }) {
 
-      handleRequest(HttpMethod.Post, "/graphql") {
-
+      handleRequest(HttpMethod.Get, "/orders") {
         addHeader("Content-Type", "application/json")
-
-        setBody(
-          """
-          {
-            "name": "boo"
-          }
-        """.trimIndent()
-        )
-
       }.apply {
-
+        val gson = GsonBuilder().setPrettyPrinting().create()
         assertEquals(HttpStatusCode.OK, response.status())
-        assertEquals("Hello boo!", response.content)
-
+        assertEquals(gson.toJson(orders), response.content)
       }
     }
   }

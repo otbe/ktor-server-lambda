@@ -9,10 +9,17 @@ package:
   artifact: target/ktor-server-lambda-sample-0.0.1-aws.jar
 
 functions:
-  hello:
-    handler: com.mercateo.oss.HandlerKt::handler
+  api:
+    handler: com.mercateo.oss.HandlerKt::handle
     timeout: 30
+    memorySize: 3008
     events:
       - http:
           path: /{proxy+}
+          method: get
+      - http:
+          path: /{proxy+}
           method: post
+      - http:
+          path: /{proxy+}
+          method: delete

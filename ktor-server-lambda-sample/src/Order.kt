@@ -16,16 +16,6 @@
 package com.mercateo.oss
 
 
-import com.amazonaws.services.lambda.runtime.Context
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import com.mercateo.ktor.server.lambda.LambdaAdapter
-import io.ktor.server.engine.EngineAPI
+data class Order(val id: String, val articles: List<Article> = emptyList())
 
-@EngineAPI
-val adapter = LambdaAdapter()
-
-
-@EngineAPI
-fun handle(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
-  adapter.handle(input, context)
+data class Article(val id: String, val name: String)

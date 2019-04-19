@@ -30,7 +30,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
 
 val orders = mutableListOf(Order("1", listOf(Article("1", "Paper"))))
 
-fun Application.module() {
+fun Application.orders() {
   install(DefaultHeaders)
 
   install(ContentNegotiation) {

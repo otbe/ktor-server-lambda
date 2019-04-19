@@ -1,7 +1,6 @@
 package com.ktor
 
 import com.google.gson.GsonBuilder
-import com.mercateo.oss.module
 import com.mercateo.oss.orders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -15,7 +14,7 @@ class ApplicationTest {
 
   @Test
   fun testRoot() {
-    withTestApplication({ module() }) {
+    withTestApplication({ orders() }) {
 
       handleRequest(HttpMethod.Get, "/orders") {
         addHeader("Content-Type", "application/json")

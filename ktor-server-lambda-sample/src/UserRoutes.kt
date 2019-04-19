@@ -15,19 +15,21 @@
  */
 package com.mercateo.oss
 
-
-import com.amazonaws.services.lambda.runtime.Context
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import com.mercateo.ktor.server.lambda.LambdaAdapter
-import io.ktor.server.engine.EngineAPI
+import io.ktor.application.call
+import io.ktor.response.respond
+import io.ktor.routing.Routing
+import io.ktor.routing.get
+import io.ktor.routing.route
 
 fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
 
-@EngineAPI
-val adapter = LambdaAdapter()
+val users = mutableListOf(User("1", "Foo Bar"))
 
+fun Routing.users() {
+  route("users") {
+    get {
+      call.respond(users)
+    }
+  }
 
-@EngineAPI
-fun handle(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
-  adapter.handle(input, context)
+}

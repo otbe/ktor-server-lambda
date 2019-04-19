@@ -15,19 +15,24 @@
  */
 package com.mercateo.oss
 
+import io.ktor.application.Application
+import io.ktor.application.install
+import io.ktor.features.ContentNegotiation
+import io.ktor.features.DefaultHeaders
+import io.ktor.gson.gson
+import io.ktor.routing.routing
 
-import com.amazonaws.services.lambda.runtime.Context
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import com.mercateo.ktor.server.lambda.LambdaAdapter
-import io.ktor.server.engine.EngineAPI
+fun Application.main() {
+  install(DefaultHeaders)
 
-fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
+  install(ContentNegotiation) {
+    gson {
+      setPrettyPrinting()
+    }
+  }
 
-@EngineAPI
-val adapter = LambdaAdapter()
-
-
-@EngineAPI
-fun handle(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
-  adapter.handle(input, context)
+  routing {
+    orders()
+    users()
+  }
+}

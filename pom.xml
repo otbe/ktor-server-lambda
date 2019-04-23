@@ -2,19 +2,60 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>com.mercateo.oss</groupId>
     <artifactId>oss-parent-pom</artifactId>
     <version>1.0.7</version>
   </parent>
 
-  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.mercateo</groupId>
   <artifactId>ktor-server-lambda</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.3</version>
   <packaging>pom</packaging>
 
   <name>parent</name>
   <description>The parent POM for all ktor-server-lambda modules</description>
+  <url>https://github.com/otbe/ktor-server-lambda</url>
+  <inceptionYear>2019</inceptionYear>
+
+  <issueManagement>
+    <system>github</system>
+    <url>https://github.com/otbe/ktor-server-lambda/issues</url>
+  </issueManagement>
+
+  <scm>
+    <connection>scm:git:git@github.com:otbe/ktor-server-lambda.git</connection>
+    <developerConnection>scm:git:git@github.com:otbe/ktor-server-lambda.git</developerConnection>
+    <url>https://github.com/otbe/ktor-server-lambda.git</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>otbe</id>
+      <name>Benjamin Otto</name>
+      <email>benjamin.otto@mercateo.com</email>
+      <url>http://www.mercateo.com</url>
+      <organization>Mercateo AG</organization>
+      <organizationUrl>http://www.mercateo.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>alxgrk</id>
+      <name>Alexander girke</name>
+      <email>alexander.girke@mercateo.com</email>
+      <url>http://www.mercateo.com</url>
+      <organization>Mercateo AG</organization>
+      <organizationUrl>http://www.mercateo.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
 
   <properties>
 
@@ -35,10 +76,17 @@
 
   <repositories>
     <repository>
-      <id>repo2</id>
+      <id>kotlin-bintray</id>
       <url>https://kotlin.bintray.com/ktor</url>
     </repository>
   </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>jcenter</id>
+      <url>https://jcenter.bintray.com/</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <build>
     <pluginManagement>
@@ -52,7 +100,47 @@
             <useSystemClassLoader>false</useSystemClassLoader>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>1.6</version>
+          <executions>
+            <execution>
+              <id>sign-artifacts</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sign</goal>
+              </goals>
+              <configuration>
+                <!-- necessary for running on CircleCI -->
+                <gpgArguments>
+                  <arg>--no-tty</arg>
+                  <arg>--batch</arg>
+                  <arg>--yes</arg>
+                  <arg>--pinentry-mode</arg>
+                  <arg>loopback</arg>
+                </gpgArguments>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <!-- necessary for being deployed to Maven Central -->
+      <plugin>
+        <groupId>org.jetbrains.dokka</groupId>
+        <artifactId>dokka-maven-plugin</artifactId>
+        <version>0.9.17</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>javadocJar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 </project>

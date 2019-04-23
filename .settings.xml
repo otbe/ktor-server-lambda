@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<settings>
+
+  <servers>
+    
+    <server>
+      <id>ossrh</id>
+      <username>${env.SONATYPE_USER}</username>
+      <password>${env.SONATYPE_PASSPHRASE}</password>
+    </server>
+
+  </servers>
+
+</settings>

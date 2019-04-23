@@ -9,8 +9,8 @@ defaults: &defaults
   docker:
     - image: circleci/openjdk:8-jdk
   environment:
-    MAVEN_OPTS: -Xmx3200m
-
+    MAVEN_REPO: "~/.m2"
+    MVN_CMD: "mvn -B --settings=.settings.xml"
 
 jobs:
   build:
@@ -27,30 +27,42 @@ jobs:
 
       - run:
           name: Installing module dependencies
-          command: mvn clean install -DskipTests
+          command: $MVN_CMD clean install -DskipTests
 
       - run:
           name: Going offline...
-          command: mvn dependency:go-offline
+          command: $MVN_CMD dependency:resolve-plugins dependency:go-offline
 
       - save_cache:
           paths:
-            - ~/.m2
+            - $MAVEN_REPO
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
       - run:
           name: Running tests
-          command: mvn verify
+          command: $MVN_CMD verify
 
-#  deploy:
-#    docker:
-#      - image: buildpack-deps:trusty
-#    steps:
-#      - checkout
-#      - run:
-#          name: Deploy Master to Heroku
-#          command: |
-#            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+  deploy:
+    <<: *defaults
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "pom.xml" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: Deploy Master to Maven Central
+          command: |
+              echo $GPG_SECRET_BASE64 | base64 --decode | gpg --import --no-tty --batch --yes
+              echo $GPG_OWNERTRUST_BASE64 | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
+              $MVN_CMD deploy -Poss.release-sign-artifacts \
+                  -Dgpg.executable=gpg \
+                  -Dgpg.passphrase=$GPG_PASSPHRASE \
+                  -pl='!ktor-server-lambda-sample'
 
 workflows:
   version: 2

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mercateo.oss
+package com.mercateo.ktor.server.lambda
 
 
 data class User(val id: String, val name: String)

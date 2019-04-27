@@ -1,8 +1,6 @@
-package com.ktor
+package com.mercateo.ktor.server.lambda
 
 import com.google.gson.GsonBuilder
-import com.mercateo.oss.main
-import com.mercateo.oss.orders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest

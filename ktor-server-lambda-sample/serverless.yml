@@ -10,7 +10,7 @@ package:
 
 functions:
   orderApi:
-    handler: com.mercateo.oss.HandlerKt::handle
+    handler: com.mercateo.ktor.server.lambda.HandlerKt::handle
     timeout: 30
     memorySize: 3008
     events:
@@ -28,7 +28,7 @@ functions:
           method: delete
 
   userApi:
-    handler: com.mercateo.oss.HandlerKt::handle
+    handler: com.mercateo.ktor.server.lambda.HandlerKt::handle
     timeout: 30
     memorySize: 3008
     events:

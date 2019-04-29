@@ -28,6 +28,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
 val adapter = LambdaAdapter()
 
 
+@Suppress("unused")
 @EngineAPI
 fun handle(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
   adapter.handle(input, context)

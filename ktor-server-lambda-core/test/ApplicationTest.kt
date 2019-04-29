@@ -1,4 +1,4 @@
-package com.ktor
+package com.mercateo.ktor.server.lambda
 
 //import kotlin.test.Test
 

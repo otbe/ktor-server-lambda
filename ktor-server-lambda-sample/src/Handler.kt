@@ -13,59 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mercateo.oss
+package com.mercateo.ktor.server.lambda
 
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.mercateo.ktor.server.lambda.LambdaAdapter
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.DefaultHeaders
-import io.ktor.gson.gson
-import io.ktor.http.ContentType
-import io.ktor.request.receive
-import io.ktor.response.respondText
-import io.ktor.routing.post
-import io.ktor.routing.routing
 import io.ktor.server.engine.EngineAPI
 
-fun Application.module(testing: Boolean = false) {
-  install(DefaultHeaders)
-
-  install(ContentNegotiation) {
-    gson {
-      setPrettyPrinting()
-    }
-  }
-
-  routing {
-
-    post("/graphql") {
-      val s = call.receive<GraphQLRequest>()
-//      println(call.attributes[ProxyRequestContextKey])
-//      println(call.attributes[LambdaContextKey])
-
-
-      call.respondText("Hello ${s.name}!", contentType = ContentType.Text.Plain)
-    }
-
-  }
-
-}
-
-data class GraphQLRequest(val name: String = "")
+fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
 
 @EngineAPI
 val adapter = LambdaAdapter()
 
 
 @EngineAPI
-fun handler(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
+fun handle(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
   adapter.handle(input, context)
-
-
-fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)

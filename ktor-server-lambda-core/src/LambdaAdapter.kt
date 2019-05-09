@@ -21,19 +21,20 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import io.ktor.server.engine.EngineAPI
 import io.ktor.server.engine.commandLineEnvironment
 
+@Suppress("unused")
 @EngineAPI
-class LambdaAdapter(args: Array<String> = emptyArray()) {
-  private var engine: LambdaEngine
+object LambdaAdapter {
+  private val engine: LambdaEngine
 
   init {
-    val applicationEnvironment = commandLineEnvironment(args)
-    engine = LambdaEngine(applicationEnvironment)
-    engine.start(false)
+    val applicationEnvironment = commandLineEnvironment(emptyArray())
+    engine = LambdaEngine(applicationEnvironment).apply {
+      start(false)
+    }
   }
 
-  fun handle(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent {
-    return engine.handleRequest(input, context)
-  }
+  fun handle(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
+    engine.handleRequest(input, context)
 }
 
 

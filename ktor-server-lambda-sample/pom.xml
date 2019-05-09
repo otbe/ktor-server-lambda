@@ -37,6 +37,11 @@
 
     <dependency>
       <groupId>io.ktor</groupId>
+      <artifactId>ktor-server-cio</artifactId>
+      <version>${ktor_version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.ktor</groupId>
       <artifactId>ktor-gson</artifactId>
       <version>${ktor_version}</version>
     </dependency>

@@ -38,11 +38,6 @@
       <artifactId>ktor-server-cio</artifactId>
       <version>${ktor_version}</version>
     </dependency>
-    <dependency>
-      <groupId>io.ktor</groupId>
-      <artifactId>ktor-gson</artifactId>
-      <version>${ktor_version}</version>
-    </dependency>
 
     <dependency>
       <groupId>com.amazonaws</groupId>
@@ -53,12 +48,6 @@
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-lambda-java-events</artifactId>
       <version>2.2.6</version>
-    </dependency>
-
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>${logback_version}</version>
     </dependency>
 
     <dependency>

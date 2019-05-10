@@ -42,7 +42,5 @@ internal class LambdaApplicationCall(
     putResponseAttribute()
     attributes.put(LambdaContextKey, context)
     attributes.put(ProxyRequestContextKey, input.requestContext)
-
-    context.logger.log("processing request ${request.local}")
   }
 }

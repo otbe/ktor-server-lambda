@@ -22,7 +22,6 @@ import io.ktor.server.engine.ApplicationEngineEnvironment
 import io.ktor.server.engine.BaseApplicationEngine
 import io.ktor.server.engine.EngineAPI
 import io.ktor.util.pipeline.execute
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.io.ByteChannel
 import kotlinx.coroutines.io.close
 import kotlinx.coroutines.runBlocking

@@ -32,15 +32,17 @@ internal class LambdaApplicationCall(
   input: APIGatewayProxyRequestEvent,
   context: Context,
   output: ByteChannel
-) :
-  BaseApplicationCall(application) {
-  override val response = LambdaApplicationResponse(this, output)
+) : BaseApplicationCall(application) {
 
   override val request = LambdaApplicationRequest(this, input)
+
+  override val response = LambdaApplicationResponse(this, output)
 
   init {
     putResponseAttribute()
     attributes.put(LambdaContextKey, context)
     attributes.put(ProxyRequestContextKey, input.requestContext)
+
+    context.logger.log("processing request ${request.local}")
   }
 }

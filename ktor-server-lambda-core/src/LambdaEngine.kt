@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit
 internal class LambdaEngine(
   environment: ApplicationEngineEnvironment
 ) : BaseApplicationEngine(environment) {
+
   override fun start(wait: Boolean): LambdaEngine {
     environment.start()
     return this

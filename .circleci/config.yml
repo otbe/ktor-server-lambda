@@ -51,11 +51,11 @@ jobs:
             - v1-dependencies-
       - run:
           name: Running ktlint
-          command: $MVN_CMD -pl ktor-server-lambda-core ktlint:check
+          command: $MVN_CMD -pl ktor-server-lambda-core,ktor-server-lambda-sample ktlint:check
 
       - run:
           name: Running tests
-          command: $MVN_CMD verify
+          command: $MVN_CMD verify -Dktlint.skip
 
   deploy:
     <<: *defaults

@@ -26,45 +26,45 @@ import io.ktor.server.engine.BaseApplicationRequest
 import kotlinx.coroutines.io.ByteReadChannel
 
 internal class LambdaApplicationRequest(
-  call: ApplicationCall,
-  private val request: APIGatewayProxyRequestEvent
+    call: ApplicationCall,
+    private val request: APIGatewayProxyRequestEvent
 ) : BaseApplicationRequest(call) {
-  override val headers = Headers.build {
-    request.headers?.forEach { (key, value) ->
-      append(key, value)
+    override val headers = Headers.build {
+        request.headers?.forEach { (key, value) ->
+            append(key, value)
+        }
     }
-  }
 
-  override val queryParameters = Parameters.build {
-    request.queryStringParameters?.forEach { (key, value) ->
-      append(key, value)
+    override val queryParameters = Parameters.build {
+        request.queryStringParameters?.forEach { (key, value) ->
+            append(key, value)
+        }
     }
-  }
 
-  override val cookies = RequestCookies(this)
+    override val cookies = RequestCookies(this)
 
-  override val local: RequestConnectionPoint = object : RequestConnectionPoint {
-    override val scheme: String
-      get() = "https"
+    override val local: RequestConnectionPoint = object : RequestConnectionPoint {
+        override val scheme: String
+            get() = "https"
 
-    override val version: String
-      get() = "1"
+        override val version: String
+            get() = "1"
 
-    override val uri: String
-      get() = request.path
+        override val uri: String
+            get() = request.path
 
-    override val host: String
-      get() = request.headers["Host"]?.toString()?.substringBefore(":") ?: "localhost"
+        override val host: String
+            get() = request.headers["Host"]?.toString()?.substringBefore(":") ?: "localhost"
 
-    override val port: Int
-      get() = request.headers["Host"]?.toString()?.substringAfter(":", "80")?.toInt() ?: 80
+        override val port: Int
+            get() = request.headers["Host"]?.toString()?.substringAfter(":", "80")?.toInt() ?: 80
 
-    override val method: HttpMethod
-      get() = HttpMethod.parse(request.httpMethod)
+        override val method: HttpMethod
+            get() = HttpMethod.parse(request.httpMethod)
 
-    override val remoteHost: String
-      get() = "unknown" // TODO
-  }
+        override val remoteHost: String
+            get() = "unknown" // TODO
+    }
 
-  override fun receiveChannel() = ByteReadChannel(request.body)
+    override fun receiveChannel() = ByteReadChannel(request.body)
 }

@@ -15,7 +15,6 @@
  */
 package com.mercateo.ktor.server.lambda
 
-
 import io.ktor.application.call
 import io.ktor.response.respond
 import io.ktor.routing.Routing
@@ -25,10 +24,9 @@ import io.ktor.routing.route
 val users = mutableListOf(User("1", "Foo Bar"))
 
 fun Routing.users() {
-  route("users") {
-    get {
-      call.respond(users)
+    route("users") {
+        get {
+            call.respond(users)
+        }
     }
-  }
-
 }

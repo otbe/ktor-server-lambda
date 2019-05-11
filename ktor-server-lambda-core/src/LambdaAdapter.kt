@@ -24,18 +24,15 @@ import io.ktor.server.engine.commandLineEnvironment
 @Suppress("unused")
 @EngineAPI
 object LambdaAdapter {
-  private val engine: LambdaEngine
+    private val engine: LambdaEngine
 
-  init {
-    val applicationEnvironment = commandLineEnvironment(emptyArray())
-    engine = LambdaEngine(applicationEnvironment).apply {
-      start(false)
+    init {
+        val applicationEnvironment = commandLineEnvironment(emptyArray())
+        engine = LambdaEngine(applicationEnvironment).apply {
+            start(false)
+        }
     }
-  }
 
-  fun handle(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
-    engine.handleRequest(input, context)
+    fun handle(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
+        engine.handleRequest(input, context)
 }
-
-
-

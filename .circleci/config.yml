@@ -51,7 +51,7 @@ jobs:
             - v1-dependencies-
       - run:
           name: Running ktlint
-          command: $MVN_CMD ktlint:check
+          command: $MVN_CMD -pl ktor-server-lambda-core ktlint:check
 
       - run:
           name: Running tests

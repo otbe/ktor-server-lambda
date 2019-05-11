@@ -13,7 +13,7 @@ defaults: &defaults
     MVN_CMD: "mvn -B --settings=.settings.xml"
 
 jobs:
-  install:
+  build:
     <<: *defaults
     steps:
       - checkout

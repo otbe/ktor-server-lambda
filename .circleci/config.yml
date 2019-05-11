@@ -27,7 +27,7 @@ jobs:
 
       - run:
           name: Installing module dependencies
-          command: $MVN_CMD clean install -DskipTests
+          command: $MVN_CMD clean install -DskipTests -Dktlint.skip
 
       - run:
           name: Going offline...

@@ -26,62 +26,60 @@ import io.ktor.server.engine.BaseApplicationRequest
 import kotlinx.coroutines.io.ByteReadChannel
 
 internal class LambdaApplicationRequest(
-  call: ApplicationCall,
-  private val request: APIGatewayProxyRequestEvent
+    call: ApplicationCall,
+    private val request: APIGatewayProxyRequestEvent
 ) : BaseApplicationRequest(call) {
 
-  override val headers = Headers.build {
-    request.headers?.forEach { (key, value) ->
-      append(key, value)
+    override val headers = Headers.build {
+        request.headers?.forEach { (key, value) ->
+            append(key, value)
+        }
     }
-  }
 
-  override val queryParameters = Parameters.build {
-    request.queryStringParameters?.forEach { (key, value) ->
-      append(key, value)
+    override val queryParameters = Parameters.build {
+        request.queryStringParameters?.forEach { (key, value) ->
+            append(key, value)
+        }
     }
-  }
 
-  override val local: RequestConnectionPoint = LambdaRequestConnectionPoint(request)
+    override val local: RequestConnectionPoint = LambdaRequestConnectionPoint(request)
 
-  override val cookies = RequestCookies(this)
+    override val cookies = RequestCookies(this)
 
-  override fun receiveChannel() = ByteReadChannel(request.body)
-
+    override fun receiveChannel() = ByteReadChannel(request.body)
 }
 
 private data class LambdaRequestConnectionPoint(
-  private val request: APIGatewayProxyRequestEvent
+    private val request: APIGatewayProxyRequestEvent
 ) : RequestConnectionPoint {
 
     override val scheme: String
-    get() = request.headers["X-Forwarded-Proto"]
-      ?: request.multiValueHeaders["X-Forwarded-Proto"]?.getOrNull(0)
-      ?: "http"
+        get() = request.headers["X-Forwarded-Proto"]
+            ?: request.multiValueHeaders["X-Forwarded-Proto"]?.getOrNull(0)
+            ?: "http"
 
     // this information is not included in APIGatewayProxyRequestEvent, so always reply with HTTP version 1.1
     override val version: String
-    get() = "HTTP/1.1"
+        get() = "HTTP/1.1"
 
     override val uri: String
-      get() = request.path
+        get() = request.path
 
     override val host: String
-      get() = request.headers["Host"]
-        ?: request.multiValueHeaders["Host"]?.getOrNull(0)
-        ?: "localhost"
+        get() = request.headers["Host"]
+            ?: request.multiValueHeaders["Host"]?.getOrNull(0)
+            ?: "localhost"
 
     override val port: Int
-      get() = request.headers["X-Forwarded-Port"]?.toInt()
-        ?: request.multiValueHeaders["X-Forwarded-Proto"]?.getOrNull(0)?.toIntOrNull()
-        ?: 80
+        get() = request.headers["X-Forwarded-Port"]?.toInt()
+            ?: request.multiValueHeaders["X-Forwarded-Proto"]?.getOrNull(0)?.toIntOrNull()
+            ?: 80
 
     override val method: HttpMethod
-      get() = HttpMethod.parse(request.httpMethod)
+        get() = HttpMethod.parse(request.httpMethod)
 
     override val remoteHost: String
-    get() = request.headers["X-Forwarded-For"]
-      ?: request.multiValueHeaders["X-Forwarded-For"]?.getOrNull(0)
-      ?: ""
-
+        get() = request.headers["X-Forwarded-For"]
+            ?: request.multiValueHeaders["X-Forwarded-For"]?.getOrNull(0)
+            ?: ""
 }

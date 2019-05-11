@@ -1,10 +1,10 @@
 package com.mercateo.ktor.server.lambda
 
-//import kotlin.test.Test
+// import kotlin.test.Test
 
 class ApplicationTest {
-  //    @Test
-  fun testRoot() {
+    //    @Test
+    fun testRoot() {
 //        withTestApplication({ module(testing = true) }) {
 //
 //            handleRequest(HttpMethod.Get, "/").apply {
@@ -12,5 +12,5 @@ class ApplicationTest {
 //                assertEquals("HELLO WORLD!", response.content)
 //            }
 //        }
-  }
+    }
 }

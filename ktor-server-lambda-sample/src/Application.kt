@@ -15,7 +15,6 @@
  */
 package com.mercateo.ktor.server.lambda
 
-
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
@@ -24,16 +23,16 @@ import io.ktor.gson.gson
 import io.ktor.routing.routing
 
 fun Application.main() {
-  install(DefaultHeaders)
+    install(DefaultHeaders)
 
-  install(ContentNegotiation) {
-    gson {
-      setPrettyPrinting()
+    install(ContentNegotiation) {
+        gson {
+            setPrettyPrinting()
+        }
     }
-  }
 
-  routing {
-    orders()
-    users()
-  }
+    routing {
+        orders()
+        users()
+    }
 }

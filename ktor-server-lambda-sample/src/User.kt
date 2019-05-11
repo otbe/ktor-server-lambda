@@ -15,5 +15,4 @@
  */
 package com.mercateo.ktor.server.lambda
 
-
 data class User(val id: String, val name: String)

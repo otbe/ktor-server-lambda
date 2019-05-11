@@ -29,45 +29,45 @@ import java.util.concurrent.TimeUnit
 
 @EngineAPI
 internal class LambdaEngine(
-  environment: ApplicationEngineEnvironment
+    environment: ApplicationEngineEnvironment
 ) : BaseApplicationEngine(environment) {
 
-  override fun start(wait: Boolean): LambdaEngine {
-    environment.start()
-    return this
-  }
-
-  override fun stop(gracePeriod: Long, timeout: Long, timeUnit: TimeUnit) {
-    environment.stop()
-  }
-
-  fun handleRequest(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
-    runBlocking {
-      val output = ByteChannel(true)
-      val call = LambdaApplicationCall(
-        application,
-        input,
-        context,
-        output
-      )
-
-      pipeline.execute(call)
-
-      val buffer = ByteArray(output.availableForRead)
-      output.readFully(buffer, 0, buffer.size)
-      output.close()
-
-      APIGatewayProxyResponseEvent().apply {
-        withStatusCode(call.response.status()?.value ?: 500)
-
-        withHeaders(
-          call.response.getApiGatewayHeaders()
-        )
-
-        // TODO https://github.com/otbe/ktor-server-lambda/issues/10
-        if (buffer.isNotEmpty()) {
-          withBody(String(buffer))
-        }
-      }
+    override fun start(wait: Boolean): LambdaEngine {
+        environment.start()
+        return this
     }
+
+    override fun stop(gracePeriod: Long, timeout: Long, timeUnit: TimeUnit) {
+        environment.stop()
+    }
+
+    fun handleRequest(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
+        runBlocking {
+            val output = ByteChannel(true)
+            val call = LambdaApplicationCall(
+                application,
+                input,
+                context,
+                output
+            )
+
+            pipeline.execute(call)
+
+            val buffer = ByteArray(output.availableForRead)
+            output.readFully(buffer, 0, buffer.size)
+            output.close()
+
+            APIGatewayProxyResponseEvent().apply {
+                withStatusCode(call.response.status()?.value ?: 500)
+
+                withHeaders(
+                    call.response.getApiGatewayHeaders()
+                )
+
+                // TODO https://github.com/otbe/ktor-server-lambda/issues/10
+                if (buffer.isNotEmpty()) {
+                    withBody(String(buffer))
+                }
+            }
+        }
 }

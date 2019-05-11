@@ -27,7 +27,7 @@ jobs:
 
       - run:
           name: Installing module dependencies
-          command: $MVN_CMD clean install -DskipTests
+          command: $MVN_CMD clean install -DskipTests -Dktlint.skip
 
       - run:
           name: Going offline...
@@ -38,9 +38,24 @@ jobs:
             - $MAVEN_REPO
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
+  verify:
+    <<: *defaults
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - run:
+          name: Running ktlint
+          command: $MVN_CMD ktlint:check
+
       - run:
           name: Running tests
-          command: $MVN_CMD verify
+          command: $MVN_CMD verify -Dktlint.skip
 
   deploy:
     <<: *defaults
@@ -50,28 +65,31 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "pom.xml" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run:
           name: Deploy Master to Maven Central
           command: |
-              echo $GPG_SECRET_BASE64 | base64 --decode | gpg --import --no-tty --batch --yes
-              echo $GPG_OWNERTRUST_BASE64 | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
-              $MVN_CMD deploy -Poss.release-sign-artifacts \
-                  -Dgpg.executable=gpg \
-                  -Dgpg.passphrase=$GPG_PASSPHRASE \
-                  -pl='!ktor-server-lambda-sample'
+            echo $GPG_SECRET_BASE64 | base64 --decode | gpg --import --no-tty --batch --yes
+            echo $GPG_OWNERTRUST_BASE64 | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
+            $MVN_CMD deploy -Poss.release-sign-artifacts \
+                -Dgpg.executable=gpg \
+                -Dgpg.passphrase=$GPG_PASSPHRASE \
+                -pl='!ktor-server-lambda-sample'
 
 workflows:
   version: 2
   build-deploy:
     jobs:
       - build
-      - deploy:
+      - verify:
           requires:
             - build
+      - deploy:
+          requires:
+            - verify
           filters:
             branches:
               only: master

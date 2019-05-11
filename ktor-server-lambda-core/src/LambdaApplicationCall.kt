@@ -28,19 +28,19 @@ val ProxyRequestContextKey = AttributeKey<APIGatewayProxyRequestEvent.ProxyReque
 
 @EngineAPI
 internal class LambdaApplicationCall(
-  application: Application,
-  input: APIGatewayProxyRequestEvent,
-  context: Context,
-  output: ByteChannel
+    application: Application,
+    input: APIGatewayProxyRequestEvent,
+    context: Context,
+    output: ByteChannel
 ) : BaseApplicationCall(application) {
 
-  override val request = LambdaApplicationRequest(this, input)
+    override val request = LambdaApplicationRequest(this, input)
 
-  override val response = LambdaApplicationResponse(this, output)
+    override val response = LambdaApplicationResponse(this, output)
 
-  init {
-    putResponseAttribute()
-    attributes.put(LambdaContextKey, context)
-    attributes.put(ProxyRequestContextKey, input.requestContext)
-  }
+    init {
+        putResponseAttribute()
+        attributes.put(LambdaContextKey, context)
+        attributes.put(ProxyRequestContextKey, input.requestContext)
+    }
 }

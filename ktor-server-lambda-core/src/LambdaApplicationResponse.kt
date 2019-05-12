@@ -36,7 +36,7 @@ internal class LambdaApplicationResponse(
   override suspend fun responseChannel() = output
 
   fun joinedMultiValueHeaders() = multiHeaderMap.mapValuesTo(mutableMapOf()) {
-    it.value.joinToString(prefix = "[", postfix = "]")
+    it.value.joinToString()
   }
 
   private val multiHeaderMap = mutableMapOf<String, MutableList<String>>()

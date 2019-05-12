@@ -51,7 +51,12 @@ internal class LambdaEngine(
         output
       )
 
+      // execute the user-defined application
       pipeline.execute(call)
+
+      // flushes the current write operation
+      // and afterwards does not accept any more writes
+      output.close()
 
       APIGatewayProxyResponseEvent()
         .withBodyIfExists(output)
@@ -60,18 +65,17 @@ internal class LambdaEngine(
 
     }
 
-  private suspend fun APIGatewayProxyResponseEvent.withBodyIfExists(output: ByteChannel): APIGatewayProxyResponseEvent {
-    ByteArray(output.availableForRead).also { buffer ->
-      output.run {
-        readFully(buffer, 0, buffer.size)
-        close()
+  private suspend fun APIGatewayProxyResponseEvent.withBodyIfExists(output: ByteChannel): APIGatewayProxyResponseEvent =
+    if (output.availableForRead == 0)
+      this
+    else
+      ByteArray(output.availableForRead).let { buffer ->
+        output.readFully(buffer, 0, buffer.size)
+
+        // TODO https://github.com/otbe/ktor-server-lambda/issues/10
+        withBody(String(buffer))
+
+        return this
       }
 
-      // TODO https://github.com/otbe/ktor-server-lambda/issues/10
-      if (buffer.isNotEmpty()) {
-        withBody(String(buffer))
-      }
-    }
-    return this
-  }
 }

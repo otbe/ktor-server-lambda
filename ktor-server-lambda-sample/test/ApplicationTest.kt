@@ -8,22 +8,19 @@ import io.ktor.server.testing.withTestApplication
 import org.junit.Test
 import kotlin.test.assertEquals
 
-
 class ApplicationTest {
 
-  @Test
-  fun testRoot() {
-    withTestApplication({ main() }) {
+    @Test
+    fun testRoot() {
+        withTestApplication({ main() }) {
 
-      handleRequest(HttpMethod.Get, "/orders") {
-        addHeader("Content-Type", "application/json")
-      }.apply {
-        val gson = GsonBuilder().setPrettyPrinting().create()
-        assertEquals(HttpStatusCode.OK, response.status())
-        assertEquals(gson.toJson(orders), response.content)
-      }
+            handleRequest(HttpMethod.Get, "/orders") {
+                addHeader("Content-Type", "application/json")
+            }.apply {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                assertEquals(HttpStatusCode.OK, response.status())
+                assertEquals(gson.toJson(orders), response.content)
+            }
+        }
     }
-  }
-
 }
-

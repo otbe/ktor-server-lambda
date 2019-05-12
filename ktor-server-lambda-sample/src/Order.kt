@@ -15,7 +15,6 @@
  */
 package com.mercateo.ktor.server.lambda
 
-
 data class Order(val id: String, val articles: List<Article> = emptyList())
 
 data class Article(val id: String, val name: String)

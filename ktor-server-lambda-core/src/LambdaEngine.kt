@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit
 
 @EngineAPI
 internal class LambdaEngine(
-  environment: ApplicationEngineEnvironment
+    environment: ApplicationEngineEnvironment
 ) : BaseApplicationEngine(environment) {
 
   override fun start(wait: Boolean): LambdaEngine {
@@ -62,7 +62,6 @@ internal class LambdaEngine(
         .withBodyIfExists(output)
         .withStatusCode(call.response.status()?.value ?: 500)
         .withHeaders(call.response.joinedMultiValueHeaders())
-
     }
 
   private suspend fun APIGatewayProxyResponseEvent.withBodyIfExists(output: ByteChannel): APIGatewayProxyResponseEvent =
@@ -77,5 +76,4 @@ internal class LambdaEngine(
 
         return this
       }
-
 }

@@ -23,8 +23,8 @@ import io.ktor.server.engine.BaseApplicationResponse
 import kotlinx.coroutines.io.ByteChannel
 
 internal class LambdaApplicationResponse(
-  call: ApplicationCall,
-  private val output: ByteChannel
+    call: ApplicationCall,
+    private val output: ByteChannel
 ) : BaseApplicationResponse(call) {
 
   private var statusCode: HttpStatusCode = HttpStatusCode.OK
@@ -62,5 +62,4 @@ internal class LambdaApplicationResponse(
    */
   override suspend fun respondUpgrade(upgrade: OutgoingContent.ProtocolUpgrade) =
     throw UnsupportedOperationException("Upgrading HTTP/1.1 connections not supported.")
-
 }

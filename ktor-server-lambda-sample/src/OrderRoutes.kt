@@ -15,43 +15,46 @@
  */
 package com.mercateo.ktor.server.lambda
 
-
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
 import io.ktor.response.respond
-import io.ktor.routing.*
+import io.ktor.routing.Routing
+import io.ktor.routing.delete
+import io.ktor.routing.get
+import io.ktor.routing.post
+import io.ktor.routing.route
 
 val orders = mutableListOf(Order("1", listOf(Article("1", "Paper"))))
 
 fun Routing.orders() {
-  route("orders") {
-    get {
-      call.respond(orders)
+    route("orders") {
+        get {
+            call.respond(orders)
+        }
+
+        post {
+            val order = call.receive<Order>()
+
+            orders.add(order)
+
+            call.respond(HttpStatusCode.NoContent)
+        }
+
+        get("{id}") {
+            val order =
+                orders.find { it.id == call.parameters["id"] } ?: return@get call.respond(HttpStatusCode.NotFound)
+
+            call.respond(order)
+        }
+
+        delete("{id}") {
+            val order =
+                orders.find { it.id == call.parameters["id"] } ?: return@delete call.respond(HttpStatusCode.NotFound)
+
+            orders.remove(order)
+
+            call.respond(HttpStatusCode.NoContent)
+        }
     }
-
-    post {
-      val order = call.receive<Order>()
-
-      orders.add(order)
-
-      call.respond(HttpStatusCode.NoContent)
-    }
-
-    get("{id}") {
-      val order = orders.find { it.id == call.parameters["id"] } ?: return@get call.respond(HttpStatusCode.NotFound)
-
-      call.respond(order)
-    }
-
-    delete("{id}") {
-      val order =
-        orders.find { it.id == call.parameters["id"] } ?: return@delete call.respond(HttpStatusCode.NotFound)
-
-      orders.remove(order)
-
-      call.respond(HttpStatusCode.NoContent)
-    }
-  }
 }
-

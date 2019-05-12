@@ -36,6 +36,3 @@ class LambdaAdapter {
   fun handle(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
     engine.handleRequest(input, context)
 }
-
-
-

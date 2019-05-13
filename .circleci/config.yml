@@ -9,7 +9,7 @@ defaults: &defaults
   docker:
     - image: circleci/openjdk:8-jdk
   environment:
-    MAVEN_REPO: "~/.m2"
+    MAVEN_REPO: "../.m2"
     MVN_CMD: "mvn -B --settings=.settings.xml"
 
 jobs:

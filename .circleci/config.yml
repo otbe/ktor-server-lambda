@@ -36,7 +36,7 @@ jobs:
       - save_cache:
           paths:
             - $MAVEN_REPO
-          key: v1-dependencies-{{ checksum "pom.xml" }}
+          key: v1-dependencies-{{ .Branch }}-{{ checksum "pom.xml" }}
 
   verify:
     <<: *defaults

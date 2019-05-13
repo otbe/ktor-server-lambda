@@ -9,7 +9,6 @@ defaults: &defaults
   docker:
     - image: circleci/openjdk:8-jdk
   environment:
-    MAVEN_REPO: "~/.m2"
     MVN_CMD: "mvn -B --settings=.settings.xml"
 
 jobs:
@@ -21,9 +20,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "pom.xml" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - v2-dependencies-{{ .Branch }}-{{ checksum "pom.xml" }}
+            - v2-dependencies-{{ checksum "pom.xml" }}
+            - v2-dependencies-
 
       - run:
           name: Installing module dependencies
@@ -35,8 +34,8 @@ jobs:
 
       - save_cache:
           paths:
-            - $MAVEN_REPO
-          key: v1-dependencies-{{ checksum "pom.xml" }}
+            - ../.m2
+          key: v2-dependencies-{{ .Branch }}-{{ checksum "pom.xml" }}
 
   verify:
     <<: *defaults
@@ -46,9 +45,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "pom.xml" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - v2-dependencies-{{ .Branch }}-{{ checksum "pom.xml" }}
+            - v2-dependencies-{{ checksum "pom.xml" }}
+            - v2-dependencies-
       - run:
           name: Running ktlint
           command: $MVN_CMD ktlint:check
@@ -65,9 +64,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "pom.xml" }}
+            - v2-dependencies-{{ checksum "pom.xml" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - v2-dependencies-
 
       - run:
           name: Deploy Master to Maven Central

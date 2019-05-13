@@ -9,7 +9,7 @@ defaults: &defaults
   docker:
     - image: circleci/openjdk:8-jdk
   environment:
-    MAVEN_REPO: "../.m2"
+    MAVEN_REPO: ".m2"
     MVN_CMD: "mvn -B --settings=.settings.xml"
 
 jobs:
@@ -21,8 +21,8 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
+            - v1-dependencies-{{ .Branch }}-{{ checksum "pom.xml" }}
             - v1-dependencies-{{ checksum "pom.xml" }}
-            # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
       - run:
@@ -46,8 +46,8 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
+            - v1-dependencies-{{ .Branch }}-{{ checksum "pom.xml" }}
             - v1-dependencies-{{ checksum "pom.xml" }}
-            # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
       - run:
           name: Running ktlint

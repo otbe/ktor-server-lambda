@@ -51,23 +51,29 @@ internal class LambdaEngine(
                 output
             )
 
+            // execute the user-defined application
             pipeline.execute(call)
 
-            val buffer = ByteArray(output.availableForRead)
-            output.readFully(buffer, 0, buffer.size)
+            // flushes the current write operation
+            // and afterwards does not accept any more writes
             output.close()
 
-            APIGatewayProxyResponseEvent().apply {
-                withStatusCode(call.response.status()?.value ?: 500)
+            APIGatewayProxyResponseEvent()
+                .withBodyIfExists(output)
+                .withStatusCode(call.response.status()?.value ?: 500)
+                .withHeaders(call.response.joinedMultiValueHeaders())
+        }
 
-                withHeaders(
-                    call.response.getApiGatewayHeaders()
-                )
+    private suspend fun APIGatewayProxyResponseEvent.withBodyIfExists(output: ByteChannel): APIGatewayProxyResponseEvent =
+        if (output.availableForRead == 0)
+            this
+        else
+            ByteArray(output.availableForRead).let { buffer ->
+                output.readFully(buffer, 0, buffer.size)
 
                 // TODO https://github.com/otbe/ktor-server-lambda/issues/10
-                if (buffer.isNotEmpty()) {
-                    withBody(String(buffer))
-                }
+                withBody(String(buffer))
+
+                return this
             }
-        }
 }

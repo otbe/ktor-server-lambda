@@ -23,7 +23,7 @@ import io.ktor.server.engine.commandLineEnvironment
 
 @Suppress("unused")
 @EngineAPI
-object LambdaAdapter {
+class LambdaAdapter {
     private val engine: LambdaEngine
 
     init {

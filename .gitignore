@@ -8,3 +8,4 @@
 .serverless
 target/
 .DS_Store
+.kotlintest

@@ -51,26 +51,29 @@
     </dependency>
 
     <dependency>
+      <groupId>com.willowtreeapps.assertk</groupId>
+      <artifactId>assertk-jvm</artifactId>
+      <version>0.14</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>io.ktor</groupId>
       <artifactId>ktor-server</artifactId>
       <version>${ktor_version}</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>io.kotlintest</groupId>
       <artifactId>kotlintest-runner-junit5</artifactId>
       <version>3.3.2</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>io.mockk</groupId>
       <artifactId>mockk</artifactId>
       <version>1.9.3</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
@@ -89,8 +92,8 @@
     </resources>
     <plugins>
       <plugin>
-        <artifactId>kotlin-maven-plugin</artifactId>
         <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
         <version>${kotlin_version}</version>
         <executions>
           <execution>

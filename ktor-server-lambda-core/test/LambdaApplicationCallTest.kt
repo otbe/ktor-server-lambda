@@ -17,7 +17,7 @@ import kotlinx.coroutines.io.ByteChannel
 class LambdaApplicationCallTest : AnnotationSpec() {
 
     @Test
-    fun shouldAddContextAndRequestContextToCallAttributes() {
+    fun `should add Context and RequestContext to Call attributes`() {
         val app = mockk<Application>(relaxed = true)
         val input = mockk<APIGatewayProxyRequestEvent>(relaxed = true)
         val context = mockk<Context>()

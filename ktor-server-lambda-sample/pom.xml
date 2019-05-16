@@ -116,6 +116,7 @@
           <createDependencyReducedPom>false</createDependencyReducedPom>
           <shadedArtifactAttached>true</shadedArtifactAttached>
           <shadedClassifierName>aws</shadedClassifierName>
+          <finalName>ktor-server-lambda-sample</finalName>
         </configuration>
         <executions>
           <execution>
@@ -125,14 +126,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.0.2</version>
-        <configuration>
-          <finalName>ktor-server-lambda-sample</finalName>
-        </configuration>
       </plugin>
     </plugins>
   </build>

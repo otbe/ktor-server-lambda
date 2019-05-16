@@ -33,7 +33,6 @@ class LambdaApplicationResponseTest : AnnotationSpec() {
         every { call.application } returns app
         every { app.receivePipeline } returns receivePipeline
         every { app.sendPipeline } returns sendPipeline
-
     }
 
     @Test

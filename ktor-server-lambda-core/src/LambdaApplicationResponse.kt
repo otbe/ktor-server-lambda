@@ -27,37 +27,37 @@ internal class LambdaApplicationResponse(
     private val output: ByteChannel
 ) : BaseApplicationResponse(call) {
 
-  override fun setStatus(statusCode: HttpStatusCode) {
-    // we don't need the http status ATM
-  }
-
-  override suspend fun responseChannel() = output
-
-  fun joinedMultiValueHeaders() = multiHeaderMap.mapValuesTo(mutableMapOf()) {
-    it.value.joinToString()
-  }
-
-  private val multiHeaderMap = mutableMapOf<String, MutableList<String>>()
-
-  override val headers = object : ResponseHeaders() {
-
-    override fun engineAppendHeader(name: String, value: String) {
-      if (multiHeaderMap[name].isNullOrEmpty()) multiHeaderMap[name] =
-          mutableListOf(value) else multiHeaderMap[name]?.add(value)
+    override fun setStatus(statusCode: HttpStatusCode) {
+        // we don't need the http status ATM
     }
 
-    override fun getEngineHeaderNames(): List<String> = multiHeaderMap.keys.toList()
+    override suspend fun responseChannel() = output
 
-    override fun getEngineHeaderValues(name: String): List<String> = multiHeaderMap[name]?.toList() ?: emptyList()
-  }
+    fun joinedMultiValueHeaders() = multiHeaderMap.mapValuesTo(mutableMapOf()) {
+        it.value.joinToString()
+    }
 
-  /**
-   * Upgrading an HTTP-Connection in a AWS Lambda environment doesn't make sense.
-   * As described here (https://developer.mozilla.org/en-US/docs/Web/HTTP/Protocol_upgrade_mechanism)
-   * this connection type is specific to WebSockets, which in turn can only be used in API Gateway connections.
-   * For more information on how to use WebSockets with AWS Lambda,
-   * see e.g. this blog post: https://serverless.com/blog/api-gateway-websockets-support/
-   */
-  override suspend fun respondUpgrade(upgrade: OutgoingContent.ProtocolUpgrade) =
-      throw UnsupportedOperationException("Upgrading HTTP/1.1 connections not supported.")
+    private val multiHeaderMap = mutableMapOf<String, MutableList<String>>()
+
+    override val headers = object : ResponseHeaders() {
+
+        override fun engineAppendHeader(name: String, value: String) {
+            if (multiHeaderMap[name].isNullOrEmpty()) multiHeaderMap[name] =
+                mutableListOf(value) else multiHeaderMap[name]?.add(value)
+        }
+
+        override fun getEngineHeaderNames(): List<String> = multiHeaderMap.keys.toList()
+
+        override fun getEngineHeaderValues(name: String): List<String> = multiHeaderMap[name]?.toList() ?: emptyList()
+    }
+
+    /**
+     * Upgrading an HTTP-Connection in a AWS Lambda environment doesn't make sense.
+     * As described here (https://developer.mozilla.org/en-US/docs/Web/HTTP/Protocol_upgrade_mechanism)
+     * this connection type is specific to WebSockets, which in turn can only be used in API Gateway connections.
+     * For more information on how to use WebSockets with AWS Lambda,
+     * see e.g. this blog post: https://serverless.com/blog/api-gateway-websockets-support/
+     */
+    override suspend fun respondUpgrade(upgrade: OutgoingContent.ProtocolUpgrade) =
+        throw UnsupportedOperationException("Upgrading HTTP/1.1 connections not supported.")
 }

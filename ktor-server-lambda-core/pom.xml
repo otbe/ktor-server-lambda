@@ -51,12 +51,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.willowtreeapps.assertk</groupId>
-      <artifactId>assertk-jvm</artifactId>
-      <version>0.14</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>io.ktor</groupId>
       <artifactId>ktor-server</artifactId>
       <version>${ktor_version}</version>

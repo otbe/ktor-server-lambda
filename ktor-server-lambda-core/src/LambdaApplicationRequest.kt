@@ -72,7 +72,7 @@ private data class LambdaRequestConnectionPoint(
 
     override val port: Int
         get() = request.headers["X-Forwarded-Port"]?.toInt()
-            ?: request.multiValueHeaders["X-Forwarded-Proto"]?.getOrNull(0)?.toIntOrNull()
+            ?: request.multiValueHeaders["X-Forwarded-Port"]?.getOrNull(0)?.toIntOrNull()
             ?: 80
 
     override val method: HttpMethod

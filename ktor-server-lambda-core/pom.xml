@@ -7,7 +7,7 @@
   <parent>
     <groupId>com.mercateo</groupId>
     <artifactId>ktor-server-lambda</artifactId>
-    <version>0.0.8</version>
+    <version>0.0.9</version>
   </parent>
 
   <artifactId>ktor-server-lambda-core</artifactId>
@@ -56,6 +56,30 @@
       <version>${ktor_version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.ktor</groupId>
+      <artifactId>ktor-server-tests</artifactId>
+      <version>${ktor_version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.kotlintest</groupId>
+      <artifactId>kotlintest-runner-junit5</artifactId>
+      <version>3.3.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.mockk</groupId>
+      <artifactId>mockk</artifactId>
+      <version>1.9.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback_version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -68,8 +92,8 @@
     </resources>
     <plugins>
       <plugin>
-        <artifactId>kotlin-maven-plugin</artifactId>
         <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
         <version>${kotlin_version}</version>
         <executions>
           <execution>

@@ -69,14 +69,40 @@ jobs:
             - v2-dependencies-
 
       - run:
-          name: Deploy Master to Maven Central
+          name: Update version &  Deploy Master to Maven Central
           command: |
+            # Get proper Git credentials with which "mvn release" can
+            # commit. Temporary credentials in environment are for read-only
+            # access.
+            mkdir -p ~/.ssh
+            echo "${GIT_KEY_BASE64}" | base64 -d > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            # probably not needed: ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+            # Else you're in "detached-head" state
+            git checkout $CIRCLE_BRANCH
+            # maybe needed but not accessible info: git config --global user.email $GITLAB_USER_EMAIL
+            git config --global user.name "${CIRCLE_USERNAME} via GL"
+            # set up gpg for signing the release artifact
             echo $GPG_SECRET_BASE64 | base64 --decode | gpg --import --no-tty --batch --yes
             echo $GPG_OWNERTRUST_BASE64 | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
-            $MVN_CMD deploy -Poss.release-sign-artifacts \
+            # Comment prefix [ci skip] prevents pipeline to trigger itself
+            $MVN_CMD_PREFIX release:prepare -DscmCommentPrefix="[ci skip]" -Darguments="-DskipTests"
+            $MVN_CMD_PREFIX release:perform -DscmCommentPrefix="[ci skip]" -Darguments="-DskipTests \
+                -Poss.release-sign-artifacts \
                 -Dgpg.executable=gpg \
                 -Dgpg.passphrase=$GPG_PASSPHRASE \
-                -pl='!ktor-server-lambda-sample'
+                -pl='!ktor-server-lambda-sample'"
+            # Original origin of cloned repository is associated with a URL only
+            # usable for read-only access. Defining a second one for pushing commits.
+            # There also is a way to ask a project about its "ssh url" via REST api - couldn't
+            # get it to work, hence, the work-around.
+            SSH_REPO_URL=$($MVN_CMD_PREFIX help:effective-pom --non-recursive | grep developerConnection | sed 's/<.*>scm:git://g' | sed 's/<.*//g')
+            git remote add origin-ssh $SSH_REPO_URL
+            git tag
+            git fetch -p origin-ssh
+            git merge FETCH_HEAD
+            git push origin-ssh --tags
+            git push origin-ssh
 
 workflows:
   version: 2
@@ -91,4 +117,4 @@ workflows:
             - verify
           filters:
             branches:
-              only: master
+              only: issue15-release-plugin

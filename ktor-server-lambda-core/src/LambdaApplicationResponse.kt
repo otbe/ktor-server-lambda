@@ -27,10 +27,8 @@ internal class LambdaApplicationResponse(
     private val output: ByteChannel
 ) : BaseApplicationResponse(call) {
 
-    private var statusCode: HttpStatusCode = HttpStatusCode.OK
-
     override fun setStatus(statusCode: HttpStatusCode) {
-        this.statusCode = statusCode
+        // we don't need the http status ATM
     }
 
     override suspend fun responseChannel() = output
@@ -45,7 +43,7 @@ internal class LambdaApplicationResponse(
 
         override fun engineAppendHeader(name: String, value: String) {
             if (multiHeaderMap[name].isNullOrEmpty()) multiHeaderMap[name] =
-                    mutableListOf(value) else multiHeaderMap[name]?.add(value)
+                mutableListOf(value) else multiHeaderMap[name]?.add(value)
         }
 
         override fun getEngineHeaderNames(): List<String> = multiHeaderMap.keys.toList()

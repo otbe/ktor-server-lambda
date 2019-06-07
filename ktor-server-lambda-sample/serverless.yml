@@ -6,7 +6,7 @@ provider:
   region: eu-central-1
 
 package:
-  artifact: target/ktor-server-lambda-sample-0.0.1-aws.jar
+  artifact: target/ktor-server-lambda-sample.jar
 
 functions:
   orderApi:

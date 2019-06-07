@@ -5,8 +5,8 @@
 
 ## Purpose
 
-`ktor-server-lambda-core` is a proof of concept implementation of an [ktor engine](https://ktor.io/servers/configuration.html) which allows you to run your ktor module in AWS Lambda behind an API Gateway.
-Basically its just a mapping of API Gateway events to ktor request/response objects and vice versa.
+`ktor-server-lambda-core` is a proof of concept implementation of an [ktor engine](https://ktor.io/servers/configuration.html), which allows you to run your ktor module in AWS Lambda behind an API Gateway.
+Basically, its just a mapping of API Gateway events to ktor request/response objects and vice versa.
 
 ## Installation
 
@@ -31,4 +31,5 @@ Just write your ktor application as always and set the Lambda Handler to `com.me
 After that the Lambda Engine will pickup your application and executes the call pipeline.
 
 
-Please have a look at our [sample](ktor-server-lambda-sample/) for a compete guide how to use this library. l
+Please have a look at our [sample](ktor-server-lambda-sample/) for a compete guide how to use this library.
+

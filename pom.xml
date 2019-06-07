@@ -12,7 +12,7 @@
 
   <groupId>com.mercateo</groupId>
   <artifactId>ktor-server-lambda</artifactId>
-  <version>0.0.9</version>
+  <version>0.0.10</version>
   <packaging>pom</packaging>
 
   <name>parent</name>

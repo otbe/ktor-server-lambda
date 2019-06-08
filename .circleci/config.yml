@@ -86,12 +86,12 @@ jobs:
             echo $GPG_SECRET_BASE64 | base64 --decode | gpg --import --no-tty --batch --yes
             echo $GPG_OWNERTRUST_BASE64 | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
             # Comment prefix [ci skip] prevents pipeline to trigger itself
-            $MVN_CMD release:prepare -DscmCommentPrefix="[ci skip]" -Darguments="-DskipTests"
-            $MVN_CMD release:perform -DscmCommentPrefix="[ci skip]" -Darguments="-DskipTests \
+            $MVN_CMD release:prepare -DscmCommentPrefix="[ci skip]" -Darguments="-DskipTests \
                 -Poss.release-sign-artifacts \
                 -Dgpg.executable=gpg \
                 -Dgpg.passphrase=$GPG_PASSPHRASE \
                 -pl='!ktor-server-lambda-sample'"
+            $MVN_CMD release:perform -DscmCommentPrefix="[ci skip]" -Darguments="-DskipTests"
             # Original origin of cloned repository is associated with a URL only
             # usable for read-only access. Defining a second one for pushing commits.
             # There also is a way to ask a project about its "ssh url" via REST api - couldn't

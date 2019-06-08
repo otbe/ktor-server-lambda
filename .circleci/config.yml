@@ -108,13 +108,13 @@ workflows:
   version: 2
   build-deploy:
     jobs:
-      - build
-      - verify:
-          requires:
-            - build
+      #- build
+      #- verify:
+      #    requires:
+      #      - build
       - deploy:
-          requires:
-            - verify
+          #requires:
+          #  - verify
           filters:
             branches:
               only: issue15-release-plugin

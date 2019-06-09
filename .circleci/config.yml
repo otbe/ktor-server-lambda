@@ -66,43 +66,26 @@ jobs:
             - v2-dependencies-{{ checksum "pom.xml" }}
             - v2-dependencies-
 
+      - add_ssh_keys:
+          fingerprints:
+            - "32:8e:9c:ef:d3:e6:3d:0c:09:95:73:32:e8:1e:17:61"
+
       - run:
           name: Update version &  Deploy Master to Maven Central
           command: |
-            # Get proper Git credentials with which "mvn release" can
-            # commit. Temporary credentials in environment are for read-only
-            # access.
-            mkdir -p ~/.ssh
-            echo "${GIT_KEY_BASE64}" | base64 -d > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
-            # probably not needed: ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-            # Else you're in "detached-head" state
-            # git checkout $CIRCLE_BRANCH
-            # maybe needed but not accessible info: git config --global user.email $GITLAB_USER_EMAIL
-            git config --global user.name "${CIRCLE_USERNAME} via GL"
+            # update username
+            git config --global user.name "${CIRCLE_USERNAME} via CircleCI"
             # increment version
             $MVN_CMD build-helper:parse-version \
                 versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} \
                 versions:commit
             # Comment prefix [ci skip] prevents pipeline to trigger itself
             git commit -am "[ci skip] increment version"
-            # push it
-            git remote add origin-ssh $CIRCLE_REPOSITORY_URL
-            git tag
-            git fetch -p origin-ssh
-            git merge FETCH_HEAD
-            git push origin-ssh --tags
-            git push origin-ssh
+            # tag and push it
+            git tag v$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+            git push --tags
+            git push
             # set up gpg for signing the release artifact
-            echo $GPG_SECRET_BASE64 | base64 --decode | gpg --import --no-tty --batch --yes
-            echo $GPG_OWNERTRUST_BASE64 | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
-            $MVN_CMD deploy -Poss.release-sign-artifacts \
-                -Dgpg.executable=gpg \
-                -Dgpg.passphrase=$GPG_PASSPHRASE \
-
-      - run:
-          name: Deploy Master to Maven Central
-          command: |
             echo $GPG_SECRET_BASE64 | base64 --decode | gpg --import --no-tty --batch --yes
             echo $GPG_OWNERTRUST_BASE64 | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
             $MVN_CMD deploy -Poss.release-sign-artifacts \

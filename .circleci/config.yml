@@ -115,12 +115,12 @@ workflows:
   build-deploy:
     jobs:
       - build
-      - verify:
-          requires:
-            - build
+      # - verify:
+      #    requires:
+      #      - build
       - deploy:
           requires:
-            - verify
+            - build #verify
           filters:
             branches:
-              only: master
+              only: issue15-release-plugin

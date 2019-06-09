@@ -8,7 +8,6 @@
     <groupId>com.mercateo</groupId>
     <artifactId>ktor-server-lambda</artifactId>
     <version>0.0.10-SNAPSHOT</version>
-    <relativePath>../../ktor-server-lambda/pom.xml</relativePath>
   </parent>
 
   <artifactId>ktor-server-lambda-sample</artifactId>

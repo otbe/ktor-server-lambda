@@ -7,7 +7,7 @@
   <parent>
     <groupId>com.mercateo</groupId>
     <artifactId>ktor-server-lambda</artifactId>
-    <version>0.0.10</version>
+    <version>0.0.11</version>
   </parent>
 
   <artifactId>ktor-server-lambda-core</artifactId>

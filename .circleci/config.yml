@@ -60,17 +60,32 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-
-      # Download and cache dependencies
       - restore_cache:
           keys:
+            - v2-dependencies-{{ .Branch }}-{{ checksum "pom.xml" }}
             - v2-dependencies-{{ checksum "pom.xml" }}
-            # fallback to using the latest cache if no exact match is found
             - v2-dependencies-
 
+      - add_ssh_keys:
+          fingerprints:
+            - "88:17:73:e4:86:f0:6d:59:a0:72:59:6c:66:af:aa:3c"
+
       - run:
-          name: Deploy Master to Maven Central
+          name: Update version &  Deploy Master to Maven Central
           command: |
+            # update username
+            git config --global user.name "${CIRCLE_USERNAME} via CircleCI"
+            # increment version
+            $MVN_CMD build-helper:parse-version \
+                versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} \
+                versions:commit
+            # Comment prefix [ci skip] prevents pipeline to trigger itself
+            git commit -am "[ci skip] increment version"
+            # tag and push it
+            git tag v$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+            git push -u origin ${CIRCLE_BRANCH}
+            git push --tags
+            # set up gpg for signing the release artifact
             echo $GPG_SECRET_BASE64 | base64 --decode | gpg --import --no-tty --batch --yes
             echo $GPG_OWNERTRUST_BASE64 | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
             $MVN_CMD deploy -Poss.release-sign-artifacts \
@@ -92,3 +107,4 @@ workflows:
           filters:
             branches:
               only: master
+

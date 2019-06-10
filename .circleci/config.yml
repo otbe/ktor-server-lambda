@@ -68,7 +68,7 @@ jobs:
 
       - add_ssh_keys:
           fingerprints:
-            - "0b:75:7f:bf:54:e8:64:99:cb:c7:51:61:26:80:5c:fa"
+            - "88:17:73:e4:86:f0:6d:59:a0:72:59:6c:66:af:aa:3c"
 
       - run:
           name: Update version &  Deploy Master to Maven Central

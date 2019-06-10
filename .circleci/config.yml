@@ -83,8 +83,8 @@ jobs:
             git commit -am "[ci skip] increment version"
             # tag and push it
             git tag v$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+            git push -u origin ${CIRCLE_BRANCH}
             git push --tags
-            git push
             # set up gpg for signing the release artifact
             echo $GPG_SECRET_BASE64 | base64 --decode | gpg --import --no-tty --batch --yes
             echo $GPG_OWNERTRUST_BASE64 | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes

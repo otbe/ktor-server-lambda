@@ -19,7 +19,7 @@ In Maven add our core dependency:
         <dependency>
             <groupId>com.mercateo</groupId>
             <artifactId>ktor-server-lambda-core</artifactId>
-            <version>0.0.8</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>

@@ -15,12 +15,12 @@
  */
 package com.mercateo.ktor.server.lambda
 
-import io.ktor.application.ApplicationCall
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.content.OutgoingContent
-import io.ktor.response.ResponseHeaders
-import io.ktor.server.engine.BaseApplicationResponse
-import kotlinx.coroutines.io.ByteChannel
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.http.content.*
+import io.ktor.response.*
+import io.ktor.server.engine.*
+import io.ktor.utils.io.*
 
 internal class LambdaApplicationResponse(
     call: ApplicationCall,

@@ -18,14 +18,10 @@ package com.mercateo.ktor.server.lambda
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import io.ktor.server.engine.ApplicationEngineEnvironment
-import io.ktor.server.engine.BaseApplicationEngine
-import io.ktor.server.engine.EngineAPI
-import io.ktor.util.pipeline.execute
-import kotlinx.coroutines.io.ByteChannel
-import kotlinx.coroutines.io.close
+import io.ktor.server.engine.*
+import io.ktor.util.pipeline.*
+import io.ktor.utils.io.*
 import kotlinx.coroutines.runBlocking
-import java.util.concurrent.TimeUnit
 
 @EngineAPI
 internal class LambdaEngine(
@@ -37,7 +33,7 @@ internal class LambdaEngine(
         return this
     }
 
-    override fun stop(gracePeriod: Long, timeout: Long, timeUnit: TimeUnit) {
+    override fun stop(gracePeriodMillis: Long, timeoutMillis: Long) {
         environment.stop()
     }
 

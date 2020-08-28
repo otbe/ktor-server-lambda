@@ -17,11 +17,10 @@ package com.mercateo.ktor.server.lambda
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
-import io.ktor.application.Application
-import io.ktor.server.engine.BaseApplicationCall
-import io.ktor.server.engine.EngineAPI
-import io.ktor.util.AttributeKey
-import kotlinx.coroutines.io.ByteChannel
+import io.ktor.application.*
+import io.ktor.server.engine.*
+import io.ktor.util.*
+import io.ktor.utils.io.*
 
 val LambdaContextKey = AttributeKey<Context>("LambdaContextKey")
 val ProxyRequestContextKey = AttributeKey<APIGatewayProxyRequestEvent.ProxyRequestContext>("ProxyRequestContextKey")

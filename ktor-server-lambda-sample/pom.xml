@@ -16,17 +16,17 @@
   <description>A sample project using ktor-server-lambda</description>
 
   <properties>
-    <ktor_version>1.1.3</ktor_version>
-    <kotlin_version>1.3.21</kotlin_version>
+    <ktor_version>1.4.0</ktor_version>
+    <kotlin_version>1.4.0</kotlin_version>
+    <kotlin_1.3_version>1.3.72</kotlin_1.3_version>
     <logback_version>1.2.1</logback_version>
-    <kotlin.version>1.3.30</kotlin.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib-jdk8</artifactId>
-      <version>${kotlin.version}</version>
+      <version>${kotlin_version}</version>
     </dependency>
 
     <dependency>
@@ -72,7 +72,7 @@
       <plugin>
         <artifactId>kotlin-maven-plugin</artifactId>
         <groupId>org.jetbrains.kotlin</groupId>
-        <version>${kotlin.version}</version>
+        <version>${kotlin_1.3_version}</version>
         <executions>
           <execution>
             <id>compile</id>
@@ -99,12 +99,12 @@
           <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-maven-noarg</artifactId>
-            <version>${kotlin_version}</version>
+            <version>${kotlin_1.3_version}</version>
           </dependency>
           <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-maven-allopen</artifactId>
-            <version>${kotlin_version}</version>
+            <version>${kotlin_1.3_version}</version>
           </dependency>
         </dependencies>
       </plugin>

@@ -5,17 +5,14 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.AnnotationSpec
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.response.respond
-import io.ktor.routing.get
-import io.ktor.routing.routing
-import io.ktor.server.engine.EngineAPI
-import io.ktor.server.testing.createTestEnvironment
+import io.ktor.application.*
+import io.ktor.response.*
+import io.ktor.routing.*
+import io.ktor.server.engine.*
+import io.ktor.server.testing.*
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import java.util.concurrent.TimeUnit
 
 fun Application.testApp() {
     routing {
@@ -81,6 +78,6 @@ internal fun LambdaEngine.withTestApplication(
         application.testApp()
         this.test()
     } finally {
-        this.stop(0L, 0L, TimeUnit.MILLISECONDS)
+        this.stop(0L, 0L)
     }
 }

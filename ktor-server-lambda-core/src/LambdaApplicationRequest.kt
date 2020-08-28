@@ -16,14 +16,11 @@
 package com.mercateo.ktor.server.lambda
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
-import io.ktor.application.ApplicationCall
-import io.ktor.http.Headers
-import io.ktor.http.HttpMethod
-import io.ktor.http.Parameters
-import io.ktor.http.RequestConnectionPoint
-import io.ktor.request.RequestCookies
-import io.ktor.server.engine.BaseApplicationRequest
-import kotlinx.coroutines.io.ByteReadChannel
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.request.*
+import io.ktor.server.engine.*
+import io.ktor.utils.io.*
 
 internal class LambdaApplicationRequest(
     call: ApplicationCall,

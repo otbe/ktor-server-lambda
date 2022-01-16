@@ -21,6 +21,8 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import io.ktor.server.engine.*
 import io.ktor.util.pipeline.*
 import io.ktor.utils.io.*
+import io.ktor.utils.io.streams.*
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @EngineAPI
@@ -40,6 +42,14 @@ internal class LambdaEngine(
     fun handleRequest(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
         runBlocking {
             val output = ByteChannel(true)
+            val body = StringBuilder()
+
+            val outputConsumerJob = launch {
+                output.readRemaining().use {
+                    it.readerUTF8().readText().let(body::append)
+                }
+            }
+
             val call = LambdaApplicationCall(
                 application,
                 input,
@@ -53,23 +63,17 @@ internal class LambdaEngine(
             // flushes the current write operation
             // and afterwards does not accept any more writes
             output.close()
+            outputConsumerJob.join()
 
             APIGatewayProxyResponseEvent()
-                .withBodyIfExists(output)
+                .withBodyIfExists(body.toString())
                 .withStatusCode(call.response.status()?.value ?: 500)
                 .withHeaders(call.response.joinedMultiValueHeaders())
         }
 
-    private suspend fun APIGatewayProxyResponseEvent.withBodyIfExists(output: ByteChannel): APIGatewayProxyResponseEvent =
-        if (output.availableForRead == 0)
-            this
-        else
-            ByteArray(output.availableForRead).let { buffer ->
-                output.readFully(buffer, 0, buffer.size)
-
-                // TODO https://github.com/otbe/ktor-server-lambda/issues/10
-                withBody(String(buffer))
-
-                return this
-            }
+    private fun APIGatewayProxyResponseEvent.withBodyIfExists(body: String): APIGatewayProxyResponseEvent {
+        if (body.isNotBlank())
+            withBody(body)
+        return this
+    }
 }

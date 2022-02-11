@@ -42,12 +42,12 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-lambda-java-core</artifactId>
-      <version>1.2.0</version>
+      <version>1.2.1</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-lambda-java-events</artifactId>
-      <version>2.2.6</version>
+      <version>3.11.0</version>
     </dependency>
 
     <dependency>
@@ -65,13 +65,13 @@
     <dependency>
       <groupId>io.kotlintest</groupId>
       <artifactId>kotlintest-runner-junit5</artifactId>
-      <version>3.3.2</version>
+      <version>3.4.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.mockk</groupId>
       <artifactId>mockk</artifactId>
-      <version>1.9.3</version>
+      <version>1.12.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>

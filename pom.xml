@@ -63,9 +63,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
-    <ktor_version>1.4.0</ktor_version>
-    <kotlin_version>1.4.0</kotlin_version>
-    <logback_version>1.2.1</logback_version>
+    <ktor_version>1.6.7</ktor_version>
+    <kotlin_version>1.6.10</kotlin_version>
+    <logback_version>1.2.10</logback_version>
 
   </properties>
 
@@ -127,7 +127,7 @@
         <plugin>
           <groupId>com.github.gantsign.maven</groupId>
           <artifactId>ktlint-maven-plugin</artifactId>
-          <version>1.0.2</version>
+          <version>1.11.2</version>
           <executions>
             <execution>
               <id>format</id>
@@ -144,7 +144,7 @@
       <plugin>
         <groupId>org.jetbrains.dokka</groupId>
         <artifactId>dokka-maven-plugin</artifactId>
-        <version>0.9.17</version>
+        <version>1.6.10</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -157,7 +157,7 @@
       <plugin>
         <groupId>io.github.phillipuniverse</groupId>
         <artifactId>githook-maven-plugin</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
         <executions>
           <execution>
             <goals>

@@ -16,9 +16,9 @@
   <description>The library used for deploying AWS Lambda functions working with Ktor</description>
 
   <properties>
-    <ktor_version>1.4.0</ktor_version>
-    <kotlin_version>1.4.0</kotlin_version>
-    <logback_version>1.2.1</logback_version>
+    <ktor_version>1.6.7</ktor_version>
+    <kotlin_version>1.6.10</kotlin_version>
+    <logback_version>1.2.10</logback_version>
   </properties>
 
   <dependencies>
@@ -91,6 +91,19 @@
       </resource>
     </resources>
     <plugins>
+      <plugin>
+        <groupId>org.jetbrains.dokka</groupId>
+        <artifactId>dokka-maven-plugin</artifactId>
+        <version>1.6.10</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>javadocJar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-maven-plugin</artifactId>

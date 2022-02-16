@@ -18,12 +18,17 @@ package com.mercateo.ktor.server.lambda
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import io.ktor.server.engine.*
-import io.ktor.util.pipeline.*
-import io.ktor.utils.io.*
-import io.ktor.utils.io.streams.*
-import kotlinx.coroutines.launch
+import io.ktor.server.engine.ApplicationEngineEnvironment
+import io.ktor.server.engine.BaseApplicationEngine
+import io.ktor.server.engine.EngineAPI
+import io.ktor.util.pipeline.execute
+import io.ktor.utils.io.ByteChannel
+import io.ktor.utils.io.close
+import io.ktor.utils.io.readRemaining
+import io.ktor.utils.io.streams.inputStream
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import java.util.Base64
 
 @EngineAPI
 internal class LambdaEngine(
@@ -42,13 +47,8 @@ internal class LambdaEngine(
     fun handleRequest(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
         runBlocking {
             val output = ByteChannel(true)
-            val body = StringBuilder()
 
-            val outputConsumerJob = launch {
-                output.readRemaining().use {
-                    it.readerUTF8().readText().let(body::append)
-                }
-            }
+            val body = async { base64EncodeOutput(output) }
 
             val call = LambdaApplicationCall(
                 application,
@@ -63,17 +63,25 @@ internal class LambdaEngine(
             // flushes the current write operation
             // and afterwards does not accept any more writes
             output.close()
-            outputConsumerJob.join()
 
             APIGatewayProxyResponseEvent()
-                .withBodyIfExists(body.toString())
+                .withBodyIfExists(body.await())
                 .withStatusCode(call.response.status()?.value ?: 500)
                 .withHeaders(call.response.joinedMultiValueHeaders())
         }
 
-    private fun APIGatewayProxyResponseEvent.withBodyIfExists(body: String): APIGatewayProxyResponseEvent {
+    private suspend fun base64EncodeOutput(output: ByteChannel): String =
+        output.readRemaining().use {
+            // TODO: stream bytes
+            val byteArray = it.inputStream().readAllBytes()
+            val b64Encoder = Base64.getEncoder()
+            b64Encoder.encodeToString(byteArray)
+        }
+
+    private fun APIGatewayProxyResponseEvent.withBodyIfExists(body: String): APIGatewayProxyResponseEvent =
         if (body.isNotBlank())
             withBody(body)
-        return this
-    }
+                .withIsBase64Encoded(true)
+        else this
+
 }

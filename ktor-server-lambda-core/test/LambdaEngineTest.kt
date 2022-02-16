@@ -11,9 +11,11 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.testing.*
+import io.ktor.util.decodeBase64Bytes
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import java.util.Base64
 
 fun Application.testApp() {
     routing {
@@ -30,6 +32,9 @@ fun Application.testApp() {
         get("empty") {
             call.respond("")
         }
+        get("binary") {
+            call.respondBytes { (0 .. 1000).map { it.toByte() }.toByteArray() }
+        }
     }
 }
 
@@ -40,6 +45,12 @@ class LambdaEngineTest : AnnotationSpec() {
     private val context = mockk<Context>(relaxed = true)
 
     private lateinit var uut: LambdaEngine
+
+    private fun String.decodeBase64Bytes(): ByteArray =
+        Base64.getDecoder().decode(this)
+
+    private fun String.decodeBase64(): String =
+        decodeBase64Bytes().let { String(it) }
 
     @BeforeEach
     fun clear() {
@@ -59,7 +70,8 @@ class LambdaEngineTest : AnnotationSpec() {
         }
 
         response.statusCode shouldBe 200
-        response.body shouldBe "bar"
+        response.body.decodeBase64() shouldBe "bar"
+        response.isBase64Encoded shouldBe true
     }
 
     @Test
@@ -74,7 +86,8 @@ class LambdaEngineTest : AnnotationSpec() {
         }
 
         response.statusCode shouldBe 200
-        response.body shouldHaveLength 8000
+        response.body.decodeBase64() shouldHaveLength 8000
+        response.isBase64Encoded shouldBe true
     }
 
     @Test
@@ -89,6 +102,22 @@ class LambdaEngineTest : AnnotationSpec() {
 
         response.statusCode shouldBe 200
         response.body shouldBe null
+        response.isBase64Encoded shouldBe null
+    }
+
+    @Test
+    fun `GET request to "binary" is answered with binary data`() {
+        every { request.path } returns "/binary"
+        every { request.httpMethod } returns "GET"
+        lateinit var response: APIGatewayProxyResponseEvent
+
+        uut.withTestApplication {
+            response = handleRequest(request, context)
+        }
+
+        response.statusCode shouldBe 200
+        response.body.decodeBase64Bytes() shouldBe (0 .. 1000).map { it.toByte() }.toByteArray()
+        response.isBase64Encoded shouldBe true
     }
 }
 

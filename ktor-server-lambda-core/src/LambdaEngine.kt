@@ -18,10 +18,17 @@ package com.mercateo.ktor.server.lambda
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import io.ktor.server.engine.*
-import io.ktor.util.pipeline.*
-import io.ktor.utils.io.*
+import io.ktor.server.engine.ApplicationEngineEnvironment
+import io.ktor.server.engine.BaseApplicationEngine
+import io.ktor.server.engine.EngineAPI
+import io.ktor.util.pipeline.execute
+import io.ktor.utils.io.ByteChannel
+import io.ktor.utils.io.close
+import io.ktor.utils.io.readRemaining
+import io.ktor.utils.io.streams.inputStream
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import java.util.Base64
 
 @EngineAPI
 internal class LambdaEngine(
@@ -40,6 +47,9 @@ internal class LambdaEngine(
     fun handleRequest(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
         runBlocking {
             val output = ByteChannel(true)
+
+            val body = async { base64EncodeOutput(output) }
+
             val call = LambdaApplicationCall(
                 application,
                 input,
@@ -55,21 +65,23 @@ internal class LambdaEngine(
             output.close()
 
             APIGatewayProxyResponseEvent()
-                .withBodyIfExists(output)
+                .withBodyIfExists(body.await())
                 .withStatusCode(call.response.status()?.value ?: 500)
                 .withHeaders(call.response.joinedMultiValueHeaders())
         }
 
-    private suspend fun APIGatewayProxyResponseEvent.withBodyIfExists(output: ByteChannel): APIGatewayProxyResponseEvent =
-        if (output.availableForRead == 0)
-            this
-        else
-            ByteArray(output.availableForRead).let { buffer ->
-                output.readFully(buffer, 0, buffer.size)
+    private suspend fun base64EncodeOutput(output: ByteChannel): String =
+        output.readRemaining().use {
+            // TODO: stream bytes
+            val byteArray = it.inputStream().readAllBytes()
+            val b64Encoder = Base64.getEncoder()
+            b64Encoder.encodeToString(byteArray)
+        }
 
-                // TODO https://github.com/otbe/ktor-server-lambda/issues/10
-                withBody(String(buffer))
+    private fun APIGatewayProxyResponseEvent.withBodyIfExists(body: String): APIGatewayProxyResponseEvent =
+        if (body.isNotBlank())
+            withBody(body)
+                .withIsBase64Encoded(true)
+        else this
 
-                return this
-            }
 }
